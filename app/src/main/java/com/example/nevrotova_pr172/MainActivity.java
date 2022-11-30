@@ -4,15 +4,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener {
 
-    Button btnWeb;
-    Button btnMap;
-    Button btnCall;
+    TextView tvOut;
+    Button btnOk;
+    Button btnCancel;
+
+    private static final String TAG = "myLogs";
 
     /** Called when the activity is first created. */
     @Override
@@ -20,33 +24,40 @@ public class MainActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnWeb = (Button) findViewById(R.id.btnWeb);
-        btnMap = (Button) findViewById(R.id.btnMap);
-        btnCall = (Button) findViewById(R.id.btnCall);
+        btnOk = (Button) findViewById(R.id.btnOk);
 
-        btnWeb.setOnClickListener(this);
-        btnMap.setOnClickListener(this);
-        btnCall.setOnClickListener(this);
+        // найдем View-элементы
+        Log.d(TAG, "найдем View-элементы");
+        tvOut = (TextView) findViewById(R.id.tvOut);
+        btnOk = (Button) findViewById(R.id.btnOk);
+        btnCancel = (Button) findViewById(R.id.btnCancel);
+
+        // присваиваем обработчик кнопкам
+        Log.d(TAG, "присваиваем обработчик кнопкам");
+        btnOk.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent;
+        // по id определяем кнопку, вызвавшую этот обработчик
+        Log.d(TAG, "по id определяем кнопку, вызвавшую этот обработчик");
+        Intent intent = new Intent();
         switch (v.getId()) {
-            case R.id.btnWeb:
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://developer.android.com"));
+            case R.id.btnOk:
+                // кнопка ОК
+                Log.d(TAG, "кнопка ОК");
+                tvOut.setText("Нажата кнопка ОК");
+                Toast.makeText(this, "Нажата кнопка ОК", Toast.LENGTH_LONG).show();
+                intent.setClass(this, MainActivity2.class);
                 startActivity(intent);
+                finish();
                 break;
-            case R.id.btnMap:
-                intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("geo:55.754283,37.62002"));
-                startActivity(intent);
-                break;
-            case R.id.btnCall:
-                intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:12345"));
-                startActivity(intent);
+            case R.id.btnCancel:
+                // кнопка Cancel
+                Log.d(TAG, "кнопка Cancel");
+                tvOut.setText("Нажата кнопка Cancel");
+                Toast.makeText(this, "Нажата кнопка Cancel", Toast.LENGTH_LONG).show();
                 break;
         }
     }
